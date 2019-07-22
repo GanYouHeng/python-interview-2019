@@ -10,7 +10,9 @@
    print(len({x for x in 'hello world' if x not in 'abcdefg'}))
    ```
 
-   答案：
+   答案：[]
+         {1:1} {3:9}
+         9
 
    ```
    
@@ -25,7 +27,7 @@
    print(reduce(int.__mul__, map(lambda x: x // 2, filter(lambda x: x ** 2 > 150, items))))
    ```
 
-   答案：
+   答案：7
 
    ```
    
@@ -34,6 +36,15 @@
 3. 有一个通过网络获取数据的Python函数（可能会因为网络或其他原因出现异常），写一个装饰器让这个函数在出现异常时可以重新执行，但尝试重新执行的次数不得超过指定的最大次数。
 
    答案：
+   from functools import wrap
+   
+   def re_excute(func):
+      
+      @wrap
+      def f(func):
+         if 
+   
+   
 
    ```Python
    
@@ -68,6 +79,18 @@
    > 返回：`[(-1, 0, 1), (-1, 2, -1)]`
 
    答案：
+   def a(*args):
+      result = []
+      if len(args) < 3:
+         print('传入的列表长度小于3，不符合要求')
+         return None
+      for i in range(len(args)-2):
+         for j in range(i+1, len(args)-1):
+            for a in range(j+1, len(args)):
+               if i+j+a == 0:
+                  result.append((i, j ,a))
+      return result
+               
 
    ```Python
    
@@ -84,6 +107,12 @@
    > 返回：`3`
 
    答案：
+   def a(count=0, *args):
+      for i in args:
+         if type(i) == list:
+            count += 1
+            a(count, i)
+      return count
 
    ```Python
    
