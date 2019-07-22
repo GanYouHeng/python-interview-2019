@@ -42,10 +42,10 @@
    
    def re_excute(func):
       
-      @wrap
-      def f(func):
+      @functools.wraps(func)
+      def f(*args, **kwargs):
          if 
-         return func()
+         return func(*args, **kwargs)
       return f
    
    ```
