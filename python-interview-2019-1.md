@@ -10,12 +10,12 @@
    print(len({x for x in 'hello world' if x not in 'abcdefg'}))
    ```
 
-   答案：[]
-         {1:1} {3:9}
-         9
-
-   ```
+   答案：
    
+   ```
+   []
+   {1:1} {3:9}
+   9
    ```
 
 2. 下面的Python代码会输出什么。
@@ -27,7 +27,7 @@
    print(reduce(int.__mul__, map(lambda x: x // 2, filter(lambda x: x ** 2 > 150, items))))
    ```
 
-   答案：7
+   答案：
 
    ```
    
@@ -36,6 +36,8 @@
 3. 有一个通过网络获取数据的Python函数（可能会因为网络或其他原因出现异常），写一个装饰器让这个函数在出现异常时可以重新执行，但尝试重新执行的次数不得超过指定的最大次数。
 
    答案：
+   
+   ```Python
    from functools import wrap
    
    def re_excute(func):
@@ -43,10 +45,8 @@
       @wrap
       def f(func):
          if 
-   
-   
-
-   ```Python
+         return func()
+      return f
    
    ```
 
@@ -79,6 +79,8 @@
    > 返回：`[(-1, 0, 1), (-1, 2, -1)]`
 
    答案：
+
+   ```Python
    def a(*args):
       result = []
       if len(args) < 3:
@@ -91,9 +93,6 @@
                   result.append((i, j ,a))
       return result
                
-
-   ```Python
-   
    ```
 
 6. 写一个函数，传入的参数是一个列表（列表中的元素可能也是一个列表），返回该列表最大的嵌套深度，例如：
@@ -107,15 +106,14 @@
    > 返回：`3`
 
    答案：
+
+   ```Python
    def a(count=0, *args):
       for i in args:
          if type(i) == list:
             count += 1
             a(count, i)
       return count
-
-   ```Python
-   
    ```
 
 7. 写一个函数，实现将输入的长链接转换成短链接，每个长链接对应的短链接必须是独一无二的且每个长链接只应该对应到一个短链接，假设短链接统一以`http://t.cn/`开头。例如：给定一个长链接：，会返回形如：的短链接。
@@ -135,7 +133,21 @@
     答案：
 
     ```Python
+    from threading import Thread
+    import os
     
+    def a():
+    
+      
+    def main():
+      threads = [ Thread(target=a) for _ in range(5) ]
+      for thread in threads:
+         thread.start()
+      for thread in threads:
+         thread.join()
+    
+    if __name__ == '__main__':
+      main()
     ```
 
 9. 请阐述Python是如何进行内存管理的。
@@ -170,7 +182,8 @@
     答案：
 
     ```SQL
-    
+    select rq, count(shengfu) as '胜', count(shengfu) as '负' from tb_result
+    where rq = '2017-04-09' or rq = '2017-04-10'
     ```
 
 11. 列举出你知道的HTTP请求头选项并说明其作用。
@@ -186,7 +199,9 @@
     答案：
 
     ```
-    
+    Cookie只能存放在客户端，可以包含Session
+    Session可以存放在服务端
+    都可以用来验证用户的登录状态
     ```
 
 13. 请阐述访问一个用Django或Flask开发的Web应用，从用户在浏览器中输入网址回车到浏览器收到Web页面的整个过程中，到底发生了哪些事情，越详细越好。
@@ -194,7 +209,7 @@
     答案：
 
     ```
-    
+    用户在浏览器输入网址后再DNS服务器中根据域名解析出对应的IP地址，然后再根据IP地址向服务器发出连接请求，服务器同意之后就可以从客户端向服务器发出请求，在根据这些请求执行对应的view方法，在view中经过一系列的业务处理后将数据通过接口传递给前端，前端在根据接口渲染对应的Web页面，然后通过服务器返回给浏览器的响应将Web页面传给浏览器，再显示给用户。
     ```
 
 14. 请阐述HTTPS的工作原理，并说明该协议与HTTP之间的区别。
@@ -203,6 +218,7 @@
 
     ```
     
+    https协议与http协议之间的区别为https使用了SSL证书来保证数据传输的安全性。
     ```
 
 15. 简述你认为新浪微博是如何让订阅者在第一时间获得博主发布的消息。
@@ -210,7 +226,7 @@
     答案：
 
     ```
-    
+    使用与celery+rabbitMQ类似的分布式异步任务和消息队列来让订阅者在第一时间获得博主发布的消息。
     ```
 
 16. 简述如何检查数据库是不是系统的性能瓶颈以及你在工作中是如何优化数据库操作性能的。
