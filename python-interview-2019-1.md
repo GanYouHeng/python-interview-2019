@@ -279,7 +279,7 @@
     答案：
 
     ```Shell
-    
+    tail -100000 /var/log/nginx/access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -1
     ```
 
 18. 请阐述跨站脚本攻击（XSS）、跨站身份伪造（CSRF）和SQL注射攻击的原理及防范措施。
