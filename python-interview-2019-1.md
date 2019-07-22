@@ -13,9 +13,9 @@
    答案：
    
    ```
-   []
-   {1:1} {3:9}
-   9
+   [('a', 1), ('b', 2), ('c', 3), ('d', 4)]
+   {1: item1} {3: item9}
+   6
    ```
 
 2. 下面的Python代码会输出什么。
@@ -30,7 +30,7 @@
    答案：
 
    ```
-   
+   42
    ```
 
 3. 有一个通过网络获取数据的Python函数（可能会因为网络或其他原因出现异常），写一个装饰器让这个函数在出现异常时可以重新执行，但尝试重新执行的次数不得超过指定的最大次数。
@@ -40,13 +40,25 @@
    ```Python
    from functools import wrap
    
-   def re_excute(func):
+   def retry(tries=1, errors=(Exception, )):
+   
+      def outer(func):
+
+         @wraps(func)
+         def inner(*args, **kwargs):
+            for _ in range(tries):
+               try:
+                  return func(*args, **kwargs)
+               except errors:
+                  pass
+            
+         return inner
+       
+       return outer
       
-      @functools.wraps(func)
-      def f(*args, **kwargs):
-         if 
-         return func(*args, **kwargs)
-      return f
+   @retry(3)
+   def foo():
+      pass
    
    ```
 
@@ -69,7 +81,8 @@
    答案：
 
    ```Python
-  
+  max(zip(prices.values(), prices.keys()))[1]
+  { key: value for key, value in prices.items() if value > 100 }
    ```
 
 5. 写一个函数，传入的参数是一个列表，如果列表中的三个元素`a`、`b`、`c`相加之和为`0`，就将这个三个元素组成一个三元组，最后该函数返回一个包含了所有这样的三元组的列表。例如：
@@ -81,18 +94,18 @@
    答案：
 
    ```Python
-   def a(*args):
+   def a(nums):
       result = []
-      if len(args) < 3:
+      if len(nums) < 3:
          print('传入的列表长度小于3，不符合要求')
          return None
-      for i in range(len(args)-2):
-         for j in range(i+1, len(args)-1):
-            for a in range(j+1, len(args)):
+      for i in range(len(nums)-2):
+         for j in range(i+1, len(nums)-1):
+            for a in range(j+1, len(nums)):
                if i+j+a == 0:
                   result.append((i, j ,a))
       return result
-               
+                
    ```
 
 6. 写一个函数，传入的参数是一个列表（列表中的元素可能也是一个列表），返回该列表最大的嵌套深度，例如：
@@ -108,12 +121,15 @@
    答案：
 
    ```Python
-   def a(count=0, *args):
-      for i in args:
-         if type(i) == list:
-            count += 1
-            a(count, i)
-      return count
+   def a(nums):
+      if isinstance(nums, list):
+         count = 1
+         for i in nums:
+            curr_count = a(i)
+            if curr_count + 1 > count:
+               count = curr_count + 1
+         return count
+      return 0
    ```
 
 7. 写一个函数，实现将输入的长链接转换成短链接，每个长链接对应的短链接必须是独一无二的且每个长链接只应该对应到一个短链接，假设短链接统一以`http://t.cn/`开头。例如：给定一个长链接：，会返回形如：的短链接。
@@ -125,7 +141,26 @@
    答案：
 
    ```Python
+   seq_nun = 10000000
+   url_maps = {}
    
+   def to_base62(num):
+      chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+      result = []
+      while num > 0:
+         result.append(chars[num % 62])
+         num //= 62
+      return ''.join(reversed(result))
+
+   
+   def to_short(url):
+      if url in url_maps:
+         return url_maps[url]
+      global seq_num
+      seq_num += 1
+      short_url = f'http://t.cn/{to_base62(seq_num)}'
+      url_maps[url] = short_url
+      return short_url
    ```
 
 8. 用5个线程，将1~100的整数累加到一个初始值为0的变量上，每次累加时将线程ID和本次累加后的结果打印出来。
@@ -133,21 +168,23 @@
     答案：
 
     ```Python
-    from threading import Thread
-    import os
+    from threading import Thread, get_ident, Lock
     
-    def a():
+    result, i = 0, 1
+    locker = Lock()
     
-      
-    def main():
-      threads = [ Thread(target=a) for _ in range(5) ]
-      for thread in threads:
-         thread.start()
-      for thread in threads:
-         thread.join()
+    def calc():
+      global result, i
+      while True:
+         with locker:
+            if i > 100:
+               break
+            result, i = result + i, i + 1
+            print(get_ident(), result)
+         
+    for _ in range(5):
+      Thread(target=calc).start()
     
-    if __name__ == '__main__':
-      main()
     ```
 
 9. 请阐述Python是如何进行内存管理的。
@@ -199,9 +236,8 @@
     答案：
 
     ```
-    Cookie只能存放在客户端，可以包含Session
+    Cookie只能存放在客户端，可以包含Session的id
     Session可以存放在服务端
-    都可以用来验证用户的登录状态
     ```
 
 13. 请阐述访问一个用Django或Flask开发的Web应用，从用户在浏览器中输入网址回车到浏览器收到Web页面的整个过程中，到底发生了哪些事情，越详细越好。
@@ -226,7 +262,8 @@
     答案：
 
     ```
-    使用与celery+rabbitMQ类似的分布式异步任务和消息队列来让订阅者在第一时间获得博主发布的消息。
+    异步化
+    建长链接做推送
     ```
 
 16. 简述如何检查数据库是不是系统的性能瓶颈以及你在工作中是如何优化数据库操作性能的。
